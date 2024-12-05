@@ -5,6 +5,7 @@ export const globalStyles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      width: '100%',
     },
     baseButton: {
         backgroundColor: 'gray',
@@ -14,5 +15,16 @@ export const globalStyles = StyleSheet.create({
         justifyContent: 'center',
         minHeight: 40,
         minWidth: 100,
-    }
+    },
+    h2: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    h3: {
+        fontSize: 18,
+    },
+    desctiptionText: {
+      fontSize: 16,
+      color: 'gray',
+    },
   });

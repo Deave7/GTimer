@@ -1,7 +1,13 @@
-import { View, Text, TextInput,  Pressable, StyleSheet } from 'react-native';
+import { View, Text, TextInput,  Pressable, StyleSheet, Button } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
+import { useRouter } from 'expo-router';
+
+
+
 
 export default function Tab() {
+
+  const router = useRouter();
   return (
     <View style={globalStyles.container}>
       <View style={styles.inputContainer}>
@@ -29,7 +35,7 @@ export default function Tab() {
         <TextInput style={styles.inputStyle} placeholder="Enter time in seconds" />
       </View>
       <View style={styles.buttonContainer}>
-        <Pressable style={globalStyles.baseButton}>
+        <Pressable style={globalStyles.baseButton} onPress={() => router.push("/modal")}>
             <Text>Start</Text>
         </Pressable>
         <Pressable style={globalStyles.baseButton}>

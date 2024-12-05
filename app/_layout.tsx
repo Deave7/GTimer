@@ -1,9 +1,13 @@
-import { Stack } from 'expo-router/stack';
+import GlobalProvider from "@/components/GlobalProvider";
+import { Stack } from "expo-router/stack";
 
 export default function Layout() {
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <GlobalProvider>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="modal" options={{ presentation: "modal", title: "Timer" }}/>
+      </Stack>
+    </GlobalProvider>
   );
 }
