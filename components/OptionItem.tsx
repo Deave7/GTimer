@@ -5,12 +5,12 @@ import { useState } from "react";
 type OptionItemProps = {
   description: string;
   title: string;
+  value: boolean;
+  onToggle: () => void;
 }
 
-const OptionItem: React.FC<OptionItemProps> = ({ description, title }) => {
+const OptionItem: React.FC<OptionItemProps> = ({ description, title, value, onToggle }) => {
 
-const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   return (
     <View style={globalStyles.container}>
       <View style={styles.optionsContainer}>
@@ -25,8 +25,8 @@ const [isEnabled, setIsEnabled] = useState(false);
             trackColor={{ false: "red", true: "green" }}
             thumbColor={"white"}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={isEnabled}
+            onValueChange={onToggle}
+            value={value}
           />
         </View>
       </View>
@@ -54,10 +54,10 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   line: {
-        height: 1, // Thickness of the line
-        backgroundColor: "gray", // Color of the line
-        width: "90%", // Line stretches across the screen
-        marginVertical: 10, // Spacing around the line
+        height: 1,
+        backgroundColor: "gray",
+        width: "90%", // 
+        marginVertical: 10, 
 
   }
 });
