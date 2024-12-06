@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext } from 'react';
 
 export type Workout = {
+    id?: string;
     title?: string;
     startCountdown: number;
     activeTime: number;

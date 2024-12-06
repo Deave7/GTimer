@@ -1,32 +1,42 @@
-import { View, FlatList, StyleSheet } from 'react-native';
-import { globalStyles } from '../../styles/globalStyles';
-import WorkoutItem from '../../components/WorkoutItem';
-
-const workoutData = [
-  { id: '1', title: 'Example 1', startCountDown: 10, activeTime: 120, restTime: 30, numberOfIntervals: 2, numberOfSets: 2, setRest: 60 },
-  { id: '2', title: 'Example 2', startCountDown: 10, activeTime: 120, restTime: 30, numberOfIntervals: 2, numberOfSets: 2, setRest: 60 },
-  { id: '3', title: 'Example 3', startCountDown: 10, activeTime: 120, restTime: 30, numberOfIntervals: 2, numberOfSets: 2, setRest: 60 },
-  { id: '4', title: 'Example 4', startCountDown: 10, activeTime: 120, restTime: 30, numberOfIntervals: 2, numberOfSets: 2, setRest: 60 },
-  { id: '5', title: 'Example 5', startCountDown: 10, activeTime: 120, restTime: 30, numberOfIntervals: 2, numberOfSets: 2, setRest: 60 },
-  { id: '6', title: 'Example 6', startCountDown: 10, activeTime: 120, restTime: 30, numberOfIntervals: 2, numberOfSets: 2, setRest: 60 },
-  { id: '7', title: 'Example 7', startCountDown: 10, activeTime: 120, restTime: 30, numberOfIntervals: 2, numberOfSets: 2, setRest: 60 },
-];
+import { View, FlatList, StyleSheet } from "react-native";
+import { globalStyles } from "../../styles/globalStyles";
+import WorkoutItem from "../../components/WorkoutItem";
+import { useContext } from "react";
+import { GlobalContext, Workout } from "../../components/GlobalContext";
+import { router } from "expo-router";
 
 export default function Tab() {
+  const { workouts, setWorkouts, setCurrentWorkout } = useContext(GlobalContext);
+
+  const handleStartWorkout = (id: string) => {
+    const workout = workouts.find((workout: Workout) => workout.id === id);
+    if (workout) {
+      setCurrentWorkout(workout);
+      router.push("/modal");
+    }
+  };
+
+  const handleDeleteWorkout = (id: string) => {
+    setWorkouts(workouts.filter((workout: Workout) => workout.id !== id));
+  };
+
   return (
     <View style={globalStyles.container}>
       <FlatList
-        data={workoutData}
-        keyExtractor={(item) => item.id}
+        data={workouts}
+        keyExtractor={(item, index) => item.id || index.toString()}
         renderItem={({ item }) => (
           <WorkoutItem
-            title={item.title}
-            startCountDown={item.startCountDown}
+            id={item.id || ""}
+            title={item.title || "Untitled"}
+            startCountDown={item.startCountdown}
             activeTime={item.activeTime}
             restTime={item.restTime}
             numberOfIntervals={item.numberOfIntervals}
             numberOfSets={item.numberOfSets}
             setRest={item.setRest}
+            onStart={handleStartWorkout} 
+            onDelete={handleDeleteWorkout} 
           />
         )}
         contentContainerStyle={styles.listContainer}
@@ -37,7 +47,7 @@ export default function Tab() {
 
 const styles = StyleSheet.create({
   listContainer: {
-    paddingVertical: 50, 
+    paddingVertical: 20,
     gap: 15,
   },
 });
