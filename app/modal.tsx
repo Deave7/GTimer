@@ -20,6 +20,7 @@ export default function ModalScreen() {
   const [intervalCount, setIntervalCount] = useState<number>(1);
   const [setCount, setSetCount] = useState<number>(1);
   const [showStage, setShowStage] = useState<boolean>(true);
+  const [currentStep, setCurrentStep] = useState<number>(0);
 
   const time = new Date();
   time.setSeconds(time.getSeconds() + startCountdown);
@@ -67,8 +68,35 @@ export default function ModalScreen() {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
+  const generateFullIntervalList = () => {
+    const steps = [];
+    for (let set = 1; set <= numberOfSets; set++) {
+      for (let interval = 1; interval <= numberOfIntervals; interval++) {
+        steps.push(`Active: ${activeTime}`);
+        if (interval < numberOfIntervals) {
+          steps.push(`Rest: ${restTime}`);
+        }
+      }
+      if (set < numberOfSets) {
+        steps.push(`Set Rest: ${setRest}`);
+      }
+    }
+    return steps;
+  };
+  
+  const fullIntervalList = generateFullIntervalList();
+
+  const renderVisibleSteps = () => {
+    return fullIntervalList.slice(currentStep, currentStep + 5); 
+  };
+
+
+
   const handleStageTransition = () => {
     setShowStage(true);
+  
+    setCurrentStep((prev) => prev + 1); 
+  
     switch (stage) {
       case "startCountdown":
         setStage("active");
@@ -128,14 +156,21 @@ export default function ModalScreen() {
         <Text style={styles.timerText}>
           {minutes}:{seconds.toString().padStart(2, "0")}
         </Text>
+        <View style={styles.intervalAndSetContainer}>
+          <Text style={styles.detailsText}>
+            Interval: {intervalCount}/{numberOfIntervals}
+          </Text>
+          <Text style={styles.detailsText}>
+            Set: {setCount}/{numberOfSets}
+          </Text>
+        </View>
       </View>
       <View style={styles.intervalList}>
-        <Text style={styles.detailsText}>
-          Interval: {intervalCount}/{numberOfIntervals}
-        </Text>
-        <Text>1. Countdown: 10</Text>
-        <Text>2. Active: 60</Text>
-        <Text>3. Rest: 60</Text>
+        {renderVisibleSteps().map((step, index) => (
+          <Text key={index} style={styles.intervalItem}>
+            {step}
+          </Text>
+        ))}
       </View>
       <View style={styles.buttonContainer}>
         {isRunning ? (
@@ -143,7 +178,10 @@ export default function ModalScreen() {
             <Text>Pause</Text>
           </Pressable>
         ) : (
-          <Pressable style={globalStyles.baseButton} onPress={() => restartTimer(seconds)}>
+          <Pressable
+            style={globalStyles.baseButton}
+            onPress={() => restartTimer(seconds)}
+          >
             <Text>Resume</Text>
           </Pressable>
         )}
@@ -160,9 +198,9 @@ const styles = StyleSheet.create({
   },
   timerContainer: {
     flexDirection: "column",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center",
-    gap: 10,
+    gap: 80,
     margin: 10,
   },
   timerText: {
@@ -173,15 +211,36 @@ const styles = StyleSheet.create({
     gap: 10,
     marginTop: 30,
   },
-  intervalList: {},
+  intervalList: {
+    margin: 30,
+    width: "80%",
+    height: "30%",
+    overflow: "hidden",
+  },
   detailsText: {
     fontSize: 18,
     textAlign: "center",
     marginVertical: 20,
+    fontWeight: "bold",
   },
   stageText: {
     fontSize: 40,
     justifyContent: "flex-start",
     alignItems: "flex-start",
+  },
+  intervalAndSetContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 50,
+  },
+  intervalItem: {
+    fontSize: 18,
+    textAlign: "center",
+    fontWeight: "bold",
+    backgroundColor: "lightgray",
+    height: 34,
+    marginVertical: 5,
+    textAlignVertical: "center",
   },
 });
