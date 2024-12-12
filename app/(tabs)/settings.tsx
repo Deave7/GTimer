@@ -11,19 +11,35 @@ export default function Tab() {
   const toggleSettings = (key: string) => {
     const updatedSettings = settings.map((setting) => 
       setting.key === key ? { ...setting, value: !setting.value } : setting)
+    
   }
   return (
     <View style={globalStyles.container}>
-      <OptionItem description={"By default the timer displays seconds:\n1min = 60s.\nToggle this to display minutes and seconds instead: 2 min = 2:00"} title={"Time display"} value={false} onToggle={function (): void {
-        throw new Error("Function not implemented.");
-      } }/>
-      <OptionItem description={"By default the last rest before you're intervals are finished is included.\nToggle this option to exclude it."} title={"Skip the last rest before finish"} value={false} onToggle={function (): void {
-        throw new Error("Function not implemented.");
-      } }/>
-      <OptionItem description={"By defualt the last rest before set rest is included.\nToggle this option to exclude it."} title={"Skip the last rest before set rest"} value={false} onToggle={function (): void {
-        throw new Error("Function not implemented.");
-      } }/>
-    </View>
+    <OptionItem
+      description={
+        "By default the timer displays seconds:\n1min = 60s.\nToggle this to display minutes and seconds instead: 2 min = 2:00"
+      }
+      title={"Time display"}
+      value={settings.find((s) => s.key === "minuteToggle")?.value || false}
+      onToggle={() => toggleSettings("minuteToggle")}
+    />
+    <OptionItem
+      description={
+        "By default the last rest before the intervals are finished is included.\nToggle this option to exclude it."
+      }
+      title={"Skip the last rest before finish"}
+      value={settings.find((s) => s.key === "skipLastRestToggle")?.value || false}
+      onToggle={() => toggleSettings("skipLastRestToggle")}
+    />
+    <OptionItem
+      description={
+        "By defualt the last rest before the set rest is included.\nToggle this option to exclude it."
+      }
+      title={"Skip the last rest before set rest"}
+      value={settings.find((s) => s.key === "skipRestBeforeSetRestToggle")?.value || false}
+      onToggle={() => toggleSettings("skipRestBeforeSetRestToggle")}
+    />
+  </View>
   );
 }
 

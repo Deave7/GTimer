@@ -5,7 +5,9 @@ import { globalStyles } from "../styles/globalStyles";
 import { useTimer } from "react-timer-hook";
 
 export default function ModalScreen() {
-  const { currentWorkout } = useContext(GlobalContext);
+  const { currentWorkout, settings } = useContext(GlobalContext);
+  const skipLastRestToggle = settings.find(setting => setting.key === 'skipLastRestToggle')?.value || false;
+  const skipRestBeforeSetRestToggle = settings.find(setting => setting.key === 'skipRestBeforeSetRestToggle')?.value || false;
 
   if (!currentWorkout) {
     return (
@@ -73,16 +75,20 @@ export default function ModalScreen() {
     for (let set = 1; set <= numberOfSets; set++) {
       for (let interval = 1; interval <= numberOfIntervals; interval++) {
         steps.push(`Active: ${activeTime}`);
-        if (interval < numberOfIntervals) {
+        
+        if (
+          interval < numberOfIntervals || (set < numberOfSets && !skipRestBeforeSetRestToggle) 
+        ) {
           steps.push(`Rest: ${restTime}`);
         }
       }
-      if (set < numberOfSets) {
+      if (set < numberOfSets && !skipLastRestToggle) {
         steps.push(`Set Rest: ${setRest}`);
       }
     }
     return steps;
   };
+  
   
   const fullIntervalList = generateFullIntervalList();
 
@@ -94,8 +100,7 @@ export default function ModalScreen() {
 
   const handleStageTransition = () => {
     setShowStage(true);
-  
-    setCurrentStep((prev) => prev + 1); 
+    setCurrentStep((prev) => prev + 1);
   
     switch (stage) {
       case "startCountdown":
@@ -108,17 +113,38 @@ export default function ModalScreen() {
           setIntervalCount(intervalCount + 1);
           restartTimer(restTime);
         } else if (setCount < numberOfSets) {
-          setStage("setRest");
-          setSetCount(setCount + 1);
-          setIntervalCount(1);
-          restartTimer(setRest);
+          if (skipRestBeforeSetRestToggle) {
+            setStage("active");
+            setSetCount(setCount + 1);
+            setIntervalCount(1);
+            restartTimer(activeTime);
+          } else {
+            setStage("setRest");
+            setSetCount(setCount + 1);
+            setIntervalCount(1);
+            restartTimer(setRest);
+          }
         } else {
           setStage("completed");
         }
         break;
       case "rest":
-        setStage("active");
-        restartTimer(activeTime);
+        if (intervalCount < numberOfIntervals) {
+          setStage("active");
+          restartTimer(activeTime);
+        } else if (setCount < numberOfSets) {
+          if (skipRestBeforeSetRestToggle) {
+            setStage("active");
+            setSetCount(setCount + 1);
+            setIntervalCount(1);
+            restartTimer(activeTime);
+          } else {
+            setStage("setRest");
+            restartTimer(setRest);
+          }
+        } else {
+          setStage("completed");
+        }
         break;
       case "setRest":
         setStage("active");

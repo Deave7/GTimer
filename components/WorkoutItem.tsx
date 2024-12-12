@@ -2,7 +2,7 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 
 type WorkoutItemProps = {
-  id: string; // Include the workout ID to identify the workout
+  id: string; 
   title: string;
   startCountDown: number;
   activeTime: number;
@@ -10,8 +10,8 @@ type WorkoutItemProps = {
   numberOfIntervals: number;
   numberOfSets: number;
   setRest: number;
-  onStart: (id: string) => void; // Handler for starting the workout
-  onDelete: (id: string) => void; // Handler for deleting the workout
+  onStart: (id: string) => void; 
+  onDelete: (id: string) => void; 
 };
 
 const WorkoutItem: React.FC<WorkoutItemProps> = ({
@@ -48,14 +48,14 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({
           style={[globalStyles.baseButton, styles.startButton]}
           onPress={() => onStart(id)}
         >
-          <Text>Start</Text>
+          <Text style={globalStyles.h3}>Start</Text>
         </Pressable>
       
         <Pressable
           style={[globalStyles.baseButton, styles.deleteButton]}
           onPress={() => onDelete(id)}
         >
-          <Text >Delete</Text>
+          <Text style={globalStyles.h3}>Delete</Text>
         </Pressable>
       </View>
     </View>
@@ -68,12 +68,14 @@ const styles = StyleSheet.create({
   item: {
     width: "95%",
     backgroundColor: "lightgray",
-    padding: 10,
+    padding: 25,
     borderRadius: 5,
     marginBottom: 15,
+  
   },
   flexContainer: {
     flexDirection: "row",
+    gap: 10,
   },
   textContainer: {
     width: "45%",
@@ -82,11 +84,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 10,
+    gap: 50,
   },
   startButton: {
-    backgroundColor: "green",
+    backgroundColor: "#a6ff4c",
+    
   },
   deleteButton: {
-    backgroundColor: "red",
+    backgroundColor: "#ee5e68",
   },
 });

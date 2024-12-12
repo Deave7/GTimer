@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   line: {
         height: 1,
         backgroundColor: "gray",
-        width: "90%", // 
+        width: "90%", 
         marginVertical: 10, 
 
   }
